@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link href="/static/styles/product.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/static/images/hr.png">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark" data-bs-theme="dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="/static/images/hr.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+            HRMS - Human Resource Management System
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <a href="/logout">Logout</a>
+          </div>
+        </div>
+      </nav>
+      <main>
+        <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
+            <div class="text-bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+              <div class="my-3 py-3">
+                <h2>Skill Name: {{skill[0]['SkillName']}}</h2>
+              </div>
+              <div class="bg-body-tertiary shadow-sm mx-auto text-body" style="width: 80%; height: 600px; border-radius: 21px 21px 0 0;">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>Employee Name</th>
+                        <th>Year Of Experience</th>
+                      </tr>
+                    </thead>
+                   
+                    <tbody>
+                      {%for s in skill%}
+                      <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>{{s['Name']}}</td>
+                        <td>{{s['YearsOfExperience']}}</td>
+                      </tr>
+                      {%endfor%}
+                    </tbody>
+                </table>
+                
+              </div>
+            </div>
+            
+          
+          </div>
+      </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+  </body>
+</html>
