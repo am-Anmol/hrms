@@ -63,7 +63,17 @@ def adminhome():
     count=cursor.fetchone()
     return render_template('adminhome.html',admin=admin,emp=emp,education=education,project=project,skill=skill,certification=certification,training=training,count=count)
     
-    
+@app.route("/sign", methods=['GET', 'POST'])
+def sign():
+    if request.method == 'POST':
+        name = request.form['name']
+        experience = request.form['experience']
+        email = request.form['email']
+        password = request.form['password']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('INSERT INTO Employee (Name, Experience, LoginID, Password) VALUES (%s, %s, %s, %s)', (name,experience,email, password))
+        mysql.connection.commit()
+        return redirect("/")
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -96,7 +106,23 @@ def login():
 def admin():
     return render_template('admin.html')
 
+@app.route("/education")
+def education():
+    return render_template('education.html')
 
+@app.route('/addempeducation/<int:id>', methods=['GET', 'POST'])
+def addempeducation(id):
+    if request.method == 'POST':
+        degree = request.form['degree']
+        university = request.form['university']
+        yearofgraduation = request.form['yearofgraduation']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('INSERT INTO Education (DegreeName, University, YearOfGraduation)  VALUES (%s, %s, %s)', (degree,university,yearofgraduation))
+        mysql.connection.commit()
+        educationid = cursor.lastrowid
+        cursor.execute('INSERT INTO EmployeeEducation (EmployeeID, EducationID)  VALUES (%s, %s)', (id,educationid))
+        mysql.connection.commit()
+        return redirect('/home')
 
 @app.route("/adminlogin", methods=['GET', 'POST'])
 def adminlogin():
