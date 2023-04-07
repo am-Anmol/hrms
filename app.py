@@ -30,11 +30,11 @@ def signup():
 @app.route("/home")
 def rehome():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM employee WHERE EmployeeID = % s', (session['id'],))
+    cursor.execute('SELECT * FROM Employee WHERE EmployeeID = % s', (session['id'],))
     emp=cursor.fetchone()
     cursor.execute('select * from EmployeeEducation ee join Education e  where ee.EducationID=e.EducationID and ee.EmployeeID = % s', (session['id'],))
     education=cursor.fetchall()
-    cursor.execute('SELECT * FROM EmployeeProject e join project p where e.projectid=p.projectid and EmployeeID = % s', (session['id'],))
+    cursor.execute('SELECT * FROM EmployeeProject e join Project p where e.projectid=p.projectid and EmployeeID = % s', (session['id'],))
     project=cursor.fetchall()
     cursor.execute('select * from EmployeeSkill e join Skill s where e.skillid=s.skillid and EmployeeID = % s', (session['id'],))
     skill=cursor.fetchall()
@@ -47,7 +47,7 @@ def rehome():
 @app.route("/adminhome")
 def adminhome():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM employee')
+    cursor.execute('SELECT * FROM Employee')
     emp=cursor.fetchall()
     cursor.execute('select * from Education')
     education=cursor.fetchall()
@@ -81,16 +81,16 @@ def login():
         email = request.form['email']
         password = request.form['password']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM employee WHERE LoginID = % s AND password = % s', (email, password))
+        cursor.execute('SELECT * FROM Employee WHERE LoginID = % s AND password = % s', (email, password))
         account = cursor.fetchone()
         if account:
             session['id'] = account['EmployeeID']
             session['email'] = account['LoginID']
-            cursor.execute('SELECT * FROM employee WHERE LoginID = % s', (email,))
+            cursor.execute('SELECT * FROM Employee WHERE LoginID = % s', (email,))
             emp=cursor.fetchone()
             cursor.execute('select * from EmployeeEducation ee join Education e  where ee.EducationID=e.EducationID and ee.EmployeeID = % s', (account['EmployeeID'],))
             education=cursor.fetchall()
-            cursor.execute('SELECT * FROM EmployeeProject e join project p where e.projectid=p.projectid and EmployeeID = % s', (account['EmployeeID'],))
+            cursor.execute('SELECT * FROM EmployeeProject e join Project p where e.projectid=p.projectid and EmployeeID = % s', (account['EmployeeID'],))
             project=cursor.fetchall()
             cursor.execute('select * from EmployeeSkill e join Skill s where e.skillid=s.skillid and EmployeeID = % s', (account['EmployeeID'],))
             skill=cursor.fetchall()
@@ -135,7 +135,7 @@ def adminlogin():
         if admin:
             session['id'] = admin['AdminID']
             session['email'] = admin['AdminEmail']
-            cursor.execute('SELECT * FROM employee')
+            cursor.execute('SELECT * FROM Employee')
             emp=cursor.fetchall()
             cursor.execute('select * from Education')
             education=cursor.fetchall()
@@ -145,7 +145,7 @@ def adminlogin():
             skill=cursor.fetchall()
             cursor.execute('select * from Certification')
             certification=cursor.fetchall()
-            cursor.execute('SELECT * from training')
+            cursor.execute('SELECT * from Training')
             training=cursor.fetchall()
             cursor.execute('SELECT COUNT(*) AS total_employees,(SELECT COUNT(*) FROM Skill) AS total_skills,(SELECT COUNT(*) FROM Project) AS total_projects,(SELECT COUNT(*) FROM Certification) AS total_certifications,(SELECT COUNT(*) FROM Training) AS total_trainings,(SELECT COUNT(*) FROM Report) AS total_reports FROM Employee')
             count=cursor.fetchone()
@@ -159,11 +159,11 @@ def empdetils(id):
         cursor.execute('SELECT * FROM employee WHERE EmployeeID = % s', (id,))
         account = cursor.fetchone()
         if account:
-            cursor.execute('SELECT * FROM employee WHERE EmployeeID = % s', (id,))
+            cursor.execute('SELECT * FROM Employee WHERE EmployeeID = % s', (id,))
             emp=cursor.fetchone()
             cursor.execute('select * from EmployeeEducation ee join Education e  where ee.EducationID=e.EducationID and ee.EmployeeID = % s', (id,))
             education=cursor.fetchall()
-            cursor.execute('SELECT * FROM EmployeeProject e join project p where e.projectid=p.projectid and EmployeeID = % s', (id,))
+            cursor.execute('SELECT * FROM EmployeeProject e join Project p where e.projectid=p.projectid and EmployeeID = % s', (id,))
             project=cursor.fetchall()
             cursor.execute('select * from EmployeeSkill e join Skill s where e.skillid=s.skillid and EmployeeID = % s', (id,))
             skill=cursor.fetchall()
@@ -361,9 +361,9 @@ def assignproject():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM employee')
     emp=cursor.fetchall()
-    cursor.execute('SELECT e.name,p.ProjectID,p.ProjectName FROM employee e JOIN employeeproject ep ON e.EmployeeID  = ep.EmployeeID JOIN project p ON ep.ProjectID  = p.ProjectID')
+    cursor.execute('SELECT e.name,p.ProjectID,p.ProjectName FROM Employee e JOIN EmployeeProject ep ON e.EmployeeID  = ep.EmployeeID JOIN project p ON ep.ProjectID  = p.ProjectID')
     empproject=cursor.fetchall()
-    cursor.execute('SELECT * FROM project')
+    cursor.execute('SELECT * FROM Project')
     project=cursor.fetchall()
     return render_template("assignproject.html",emp=emp,project=project,empproject=empproject)
 
@@ -372,9 +372,9 @@ def revokeproject():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM employee')
     emp=cursor.fetchall()
-    cursor.execute('SELECT e.name,p.ProjectID,p.ProjectName FROM employee e JOIN employeeproject ep ON e.EmployeeID  = ep.EmployeeID JOIN project p ON ep.ProjectID  = p.ProjectID')
+    cursor.execute('SELECT e.name,p.ProjectID,p.ProjectName FROM employee e JOIN EmployeeProject ep ON e.EmployeeID  = ep.EmployeeID JOIN project p ON ep.ProjectID  = p.ProjectID')
     empproject=cursor.fetchall()
-    cursor.execute('SELECT * FROM project')
+    cursor.execute('SELECT * FROM Project')
     project=cursor.fetchall()
     return render_template("revokeproject.html",emp=emp,project=project,empproject=empproject)
 
@@ -403,7 +403,7 @@ def revokeproj():
 @app.route('/generatereport')
 def generatereport():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM employee')
+    cursor.execute('SELECT * FROM Employee')
     emp=cursor.fetchall()
     return render_template("generatereport.html",emp=emp)
 
